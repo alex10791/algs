@@ -124,7 +124,9 @@ int main(int argc, char *argv[]) {	//
 	std::cout << "1 : " << btree.search(20) << std::endl;
 
 
-
+	std::cout << "KOKOS" << std::endl;
+	btree.flush();
+	std::cout << "KOKOS" << std::endl;
 
 
 	

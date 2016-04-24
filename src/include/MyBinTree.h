@@ -11,7 +11,6 @@ private:
 		treeNode *left;
 		treeNode *right;
 		T data;
-		//treeNode();
 		treeNode(const T d);
 	} treeNode;
 	treeNode *root;
@@ -23,6 +22,7 @@ private:
 	void traversePreOrderRecursion(treeNode *node);
 	void traverseInOrderRecursion(treeNode *node);
 	void traversePostOrderRecursion(treeNode *node);
+	void flushRecursion(treeNode *node);
 public:
 	MyBinTree();
 	~MyBinTree();
@@ -32,6 +32,7 @@ public:
 	void traversePreOrder();
 	void traverseInOrder();
 	void traversePostOrder();
+	void flush();
 };
 
 
@@ -44,14 +45,9 @@ template <class T> MyBinTree<T>::MyBinTree() {
 }
 
 template <class T> MyBinTree<T>::~MyBinTree() {
-	//flush();
+	flush();
 }
-/*
-template <class T> MyBinTree<T>::treeNode::treeNode() {
-	data = (T)NULL;
-	next = NULL;
-}
-*/
+
 template <class T> MyBinTree<T>::treeNode::treeNode(const T d) {
 	data = d;
 	left = NULL;
@@ -253,6 +249,24 @@ template <class T> void *MyBinTree<T>::removeRecursionLeftSlide(treeNode *node, 
 	}
 }
 
+
+template <class T> void MyBinTree<T>::flush() {
+	if (root == NULL) {
+		return;
+	} 
+	return flushRecursion(root);
+}
+
+template <class T> void MyBinTree<T>::flushRecursion(treeNode *node) {
+	if (node == NULL) {
+		return;
+	} 
+	std::cout << "left" << std::endl;
+	flushRecursion(node->left);
+	std::cout << "right" << std::endl;
+	flushRecursion(node->right);
+	delete node;
+}
 
 #endif
 
