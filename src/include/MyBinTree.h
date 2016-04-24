@@ -22,7 +22,7 @@ private:
 	void traversePreOrderRecursion(treeNode *node);
 	void traverseInOrderRecursion(treeNode *node);
 	void traversePostOrderRecursion(treeNode *node);
-	void flushRecursion(treeNode *node);
+	void flushRecursion(treeNode **node);
 public:
 	MyBinTree();
 	~MyBinTree();
@@ -254,18 +254,17 @@ template <class T> void MyBinTree<T>::flush() {
 	if (root == NULL) {
 		return;
 	} 
-	return flushRecursion(root);
+	flushRecursion(&root);
 }
 
-template <class T> void MyBinTree<T>::flushRecursion(treeNode *node) {
-	if (node == NULL) {
+template <class T> void MyBinTree<T>::flushRecursion(treeNode **node) {
+	if (*node == NULL) {
 		return;
 	} 
-	std::cout << "left" << std::endl;
-	flushRecursion(node->left);
-	std::cout << "right" << std::endl;
-	flushRecursion(node->right);
-	delete node;
+	flushRecursion(&((*node)->left));
+	flushRecursion(&((*node)->right));
+	delete (*node);
+	(*node) = NULL;
 }
 
 #endif
