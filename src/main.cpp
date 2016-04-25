@@ -7,6 +7,7 @@
 #include "MyQueue.h"
 #include "MyLinkedList.h"
 #include "MyBinTree.h"
+#include "MyMaxHeap.h"
 
 
 using namespace std;
@@ -17,6 +18,42 @@ int main(int argc, char *argv[]) {	//
 		cout << argv[i] << endl;
 	}
 	
+
+	std::cout << "MyMaxHeap" << std::endl;
+	MyMaxHeap<int> heap = MyMaxHeap<int>(10, -1);
+	std::cout << heap.insert(1) << std::endl;
+	std::cout << heap.insert(5) << std::endl;
+	std::cout << heap.insert(3) << std::endl;
+	std::cout << heap.insert(10) << std::endl;
+	std::cout << heap.insert(7) << std::endl;
+	std::cout << heap.insert(12) << std::endl;
+	std::cout << heap.insert(4) << std::endl;
+	std::cout << heap.insert(5) << std::endl;
+	std::cout << heap.insert(20) << std::endl;
+
+	std::cout << heap.insert(15) << std::endl;
+	std::cout << heap.insert(40) << std::endl;
+	std::cout << heap.insert(50) << std::endl;
+	heap.printHeap();
+
+	std::cout << heap.extract() << std::endl;
+	std::cout << heap.extract() << std::endl;
+	std::cout << heap.extract() << std::endl;
+
+	std::cout << heap.extract() << std::endl;
+	std::cout << heap.extract() << std::endl;
+	std::cout << heap.extract() << std::endl;
+
+	std::cout << heap.extract() << std::endl;
+	std::cout << heap.extract() << std::endl;
+	std::cout << heap.extract() << std::endl;
+
+	std::cout << heap.extract() << std::endl;
+	std::cout << heap.extract() << std::endl;
+	std::cout << heap.extract() << std::endl;
+
+	heap.printHeap();
+
 
 
 	std::cout << "MyBinTree" << std::endl;
