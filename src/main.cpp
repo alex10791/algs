@@ -8,6 +8,7 @@
 #include "MyLinkedList.h"
 #include "MyBinTree.h"
 #include "MyMaxHeap.h"
+#include "MyRedBlackTree.h"
 
 
 using namespace std;
@@ -18,22 +19,34 @@ int main(int argc, char *argv[]) {	//
 		cout << argv[i] << endl;
 	}
 	
+	std::cout << "MyRedBlackTree" << std::endl;
+	MyRedBlackTree<int> rbtree = MyRedBlackTree<int>();
+	std::cout << rbtree.insert(7) << std::endl;
+	std::cout << rbtree.insert(6) << std::endl;
+	std::cout << rbtree.insert(5) << std::endl;
+	std::cout << rbtree.insert(4) << std::endl;
+	std::cout << rbtree.insert(3) << std::endl;
+	std::cout << rbtree.insert(2) << std::endl;
+	std::cout << rbtree.insert(1) << std::endl;
+	rbtree.printTree();
+
+
 
 	std::cout << "MyMaxHeap" << std::endl;
-	MyMaxHeap<int> heap = MyMaxHeap<int>(10, -1);
-	std::cout << heap.insert(1) << std::endl;
-	std::cout << heap.insert(5) << std::endl;
-	std::cout << heap.insert(3) << std::endl;
-	std::cout << heap.insert(10) << std::endl;
-	std::cout << heap.insert(7) << std::endl;
-	std::cout << heap.insert(12) << std::endl;
-	std::cout << heap.insert(4) << std::endl;
-	std::cout << heap.insert(5) << std::endl;
-	std::cout << heap.insert(20) << std::endl;
+	MyMaxHeap<char> heap = MyMaxHeap<char>(10);
+	std::cout << heap.insert('a', 1) << std::endl;
+	std::cout << heap.insert('b', 5) << std::endl;
+	std::cout << heap.insert('c', 3) << std::endl;
+	std::cout << heap.insert('d', 10) << std::endl;
+	std::cout << heap.insert('e', 7) << std::endl;
+	std::cout << heap.insert('f', 12) << std::endl;
+	std::cout << heap.insert('g', 4) << std::endl;
+	std::cout << heap.insert('h', 5) << std::endl;
+	std::cout << heap.insert('i', 20) << std::endl;
 
-	std::cout << heap.insert(15) << std::endl;
-	std::cout << heap.insert(40) << std::endl;
-	std::cout << heap.insert(50) << std::endl;
+	std::cout << heap.insert('j', 15) << std::endl;
+	std::cout << heap.insert('k', 40) << std::endl;
+	std::cout << heap.insert('l', 50) << std::endl;
 	heap.printHeap();
 
 	std::cout << heap.extract() << std::endl;
