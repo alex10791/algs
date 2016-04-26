@@ -20,22 +20,24 @@ private:
 	} treeNode;
 	treeNode *root;
 	treeNode *nilNode;
-	void insertRecursion(treeNode *z);
-	bool searchRecursion(const T d, treeNode *node);
+	void insertFixup(treeNode *z);
 	void printTreeRecursion(treeNode *node);
 	void leftRotate(treeNode *x);
 	void rightRotate(treeNode *x);
-	//bool removeRecursion(const T d, treeNode *node, treeNode **parentNodeSidePtr);
-	//void *removeRecursionRightSlide(treeNode *node, treeNode **parentNodeSidePtr);
-	//void *removeRecursionLeftSlide(treeNode *node, treeNode **parentNodeSidePtr);
+	void transplant(treeNode *u, treeNode *v);
+	void removeFixup(treeNode *node);
+	void *treeMax(treeNode *node);
+	void *treeMin(treeNode *node);
+	void remove(treeNode *z);
+	void *search(const T d);
 	void flushRecursion(treeNode **node);
 public:
 	MyRedBlackTree();
 	~MyRedBlackTree();
 	bool insert(const T d);
-	bool search(const T d);
+	bool searchItem(const T d);
 	void printTree();
-	//bool remove(const T d);
+	bool removeItem(const T d);
 	void flush();
 };
 
@@ -90,11 +92,11 @@ template <class T> bool MyRedBlackTree<T>::insert(const T d) {
 	z->left = nilNode;
 	z->right = nilNode;
 	z->color = Red;
-	insertRecursion(z);
+	insertFixup(z);
 	return true;
 }
 
-template <class T> void MyRedBlackTree<T>::insertRecursion(treeNode *z) {
+template <class T> void MyRedBlackTree<T>::insertFixup(treeNode *z) {
 	treeNode *y;
 	while (z->parent->color == Red) {
 		if (z->parent == z->parent->parent->left) {
@@ -173,49 +175,26 @@ template <class T> void MyRedBlackTree<T>::rightRotate(treeNode *x) {
 }
 
 
-template <class T> bool MyRedBlackTree<T>::search(const T d) {
-	if (root == NULL) {
+template <class T> bool MyRedBlackTree<T>::searchItem(const T d) {
+	if (search(d) == NULL) {
 		return false;
-	} else {
-		return searchRecursion(d, root);		
 	}
-	return false;
+	return true;
 }
 
-template <class T> bool MyRedBlackTree<T>::searchRecursion(const T d, treeNode *node) {
-	/*
-	if (node->data == d) {
-		std::cout << d << "\t";
-		if (node->left == NULL) {
-			std::cout << "Left\t:\tNULL\t";
+template <class T> void *MyRedBlackTree<T>::search(const T d) {
+	treeNode *node = root;
+	while (node != nilNode) {
+		if (node->data > d) {
+			node = node->left;
+		} else if (node->data < d) {
+			node = node->right;
 		} else {
-			std::cout << "Left\t:\t" << node->left->data << "\t";
-		}
-		if (node->right == NULL) {
-			std::cout << "Right\t:\tNULL\t";
-		} else {
-			std::cout << "Right\t:\t" << node->right->data << "\t";
-		}
-		std::cout << std::endl;
-		return true;
-	}
-	if (d > node->data) {
-		if (node->right == NULL) {
-			return false;
-		} else {
-			return searchRecursion(d, node->right);
-		}
-	} else {
-		if (node->left == NULL) {
-			return false;
-		} else {
-			return searchRecursion(d, node->left);
+			return node;
 		}
 	}
-	*/
-	return false;
+	return NULL;
 }
-
 
 
 template <class T> void MyRedBlackTree<T>::printTree() {
@@ -230,9 +209,9 @@ template <class T> void MyRedBlackTree<T>::printTreeRecursion(treeNode *node) {
 	}
 	char* col;
 	if (node->color == Red) {
-		col = "Red";
+		col = (char*)"Red";
 	} else {
-		col = "Black";
+		col = (char*)"Black";
 	}
 	std::cout << "node: " << node << " data: " << node->data << " color: " << col << " left: " << node->left << " right: " << node->right << std::endl;
 	//std::cout << "LEFT\n";
@@ -241,25 +220,145 @@ template <class T> void MyRedBlackTree<T>::printTreeRecursion(treeNode *node) {
 	printTreeRecursion(node->right);
 }
 
+template <class T> bool MyRedBlackTree<T>::removeItem(const T d) {
+	treeNode *item = (treeNode *)search(d);
+	if (item == NULL) {
+		return false;
+	}
+	remove(item);
+	return true;
+}
+
+
+template <class T> void MyRedBlackTree<T>::remove(treeNode *z) {
+	treeNode *x = NULL;
+	treeNode *y = z;
+	Color yinitcol = y->color;
+	if (z->left == nilNode) {
+		x = z->right;
+		transplant(z, z->right);
+	} else if (z->right == nilNode) {
+		x = z->left;
+		transplant(z, z->left);
+	} else {
+		y = (treeNode *)treeMin(z->right);
+		yinitcol = y->color;
+		x = y->right;
+		if (y->parent == z) {
+			x->parent = y;
+		} else {
+			transplant(y, y->right);
+			y->right = z->right;
+			y->right->parent = y;
+		}
+		transplant(z, y);
+		y->left = z->left;
+		x->left->parent = y;
+		y->color = z->color;
+	}
+	if (yinitcol == Black) {
+		removeFixup(x);
+	}
+	delete z;
+}
+
+template <class T> void MyRedBlackTree<T>::removeFixup(treeNode *x) {
+	treeNode *w;
+	while (x != root && x->color == Black) {
+		if (x == x->parent->left) {
+			w = x->parent->right;
+			if (w->color == Red) {
+				w->color = Black;
+				x->parent->color = Red;
+				leftRotate(x->parent);
+				w = x->parent->right;
+			}
+			if (w->left->color == Black && w->right->color == Black) {
+				w->color = Red;
+				x = x->parent;
+			} else {
+				if (w->right->color == Black) {
+					w->left->color = Black;
+					w->color = Red;
+					rightRotate(w);
+					w = x->parent->right;
+				}
+				w->color = x->parent->color;
+				x->parent->color = Black;
+				w->right->color = Black;
+				leftRotate(x->parent);
+				x = root;
+			}
+		} else {
+			w = x->parent->left;
+			if (w->color == Red) {
+				w->color = Black;
+				x->parent->color = Red;
+				rightRotate(x->parent);
+				w = x->parent->left;
+			}
+			if (w->right->color == Black && w->left->color == Black) {
+				w->color = Red;
+				x = x->parent;
+			} else {
+				if (w->left->color == Black) {
+					w->right->color = Black;
+					w->color = Red;
+					leftRotate(w);
+					w = x->parent->left;
+				}
+				w->color = x->parent->color;
+				x->parent->color = Black;
+				w->left->color = Black;
+				rightRotate(x->parent);
+				x = root;
+			}
+		}
+	}
+	x->color = Black;
+}
+
+template <class T> void MyRedBlackTree<T>::transplant(treeNode *u, treeNode *v) {
+	if (u->parent == nilNode) {
+		root = v;
+	} else if (u == u->parent->left) {
+		u->parent->left = v;
+	} else {
+		u->parent->right = v;
+	}
+	v->parent = u->parent;
+}
+
+template <class T> void *MyRedBlackTree<T>::treeMax(treeNode *node) {
+	while (node->right != nilNode) {
+		node = node->right;
+	}
+	return node;
+}
+
+template <class T> void *MyRedBlackTree<T>::treeMin(treeNode *node) {
+	while (node->left != nilNode) {
+		node = node->left;
+	}
+	return node;
+}
 
 
 template <class T> void MyRedBlackTree<T>::flush() {
-	/*
-	if (root == NULL) {
+	if (root == nilNode) {
 		return;
 	} 
 	flushRecursion(&root);
-	*/
 }
 
 template <class T> void MyRedBlackTree<T>::flushRecursion(treeNode **node) {
-	if (*node == NULL) {
+	if (*node == nilNode) {
 		return;
 	} 
 	flushRecursion(&((*node)->left));
 	flushRecursion(&((*node)->right));
 	delete (*node);
-	(*node) = NULL;
+	(*node) = nilNode;
 }
 
 #endif

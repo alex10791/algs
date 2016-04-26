@@ -3,6 +3,16 @@
 
 #include <iostream>
 
+/*
+ *
+ * Should probably fix the approach used here
+ * Should probably instead return pointers rather than values
+ * Then make functions private and expose functions that can 
+ * return the appropriate values.
+ * 
+ */
+
+
 // DECLARATION
 
 template <class T> class MyMaxHeap {
@@ -79,7 +89,9 @@ template <class T> void MyMaxHeap<T>::printHeap() {
 
 template <class T> T MyMaxHeap<T>::extract() {
 	if (next == 0) {
-		return (unsigned int)-1;
+		//std::cerr << "kokos" << std::endl;
+		//return (unsigned int)(-1);
+		return (T)NULL;
 	}
 	heapNode temp;
 	

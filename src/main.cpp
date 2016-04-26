@@ -11,12 +11,12 @@
 #include "MyRedBlackTree.h"
 
 
-using namespace std;
+//using namespace std;
 
 int main(int argc, char *argv[]) {	//
 	
 	for (int i = 0; i < argc; ++i) {
-		cout << argv[i] << endl;
+		std::cout << argv[i] << std::endl;
 	}
 	
 	std::cout << "MyRedBlackTree" << std::endl;
@@ -29,6 +29,16 @@ int main(int argc, char *argv[]) {	//
 	std::cout << rbtree.insert(2) << std::endl;
 	std::cout << rbtree.insert(1) << std::endl;
 	rbtree.printTree();
+
+	//std:cout << rbtree.remove() << std::endl;
+
+	std::cout << rbtree.removeItem(5) << std::endl;
+	std::cout << rbtree.removeItem(5) << std::endl;
+	rbtree.printTree();
+
+
+	std::cout << "Searching 7: " << rbtree.searchItem(7) << std::endl;
+	std::cout << "Searching 5: " << rbtree.searchItem(5) << std::endl;
 
 
 
