@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "MyHeap.h"
+#include "MyLinkedList.h"
 
 #define N 30
 
@@ -8,68 +8,63 @@ int alphabetical_order(node *a, node *b);
 
 int main(int argc, char*argv[]) {
 	
-	int i;
-	char* x[35];
+	//int i;
+	//char* x[35];
+
+	int* x = (int*)malloc(sizeof(int));
+	*x = 1;
+	int* y = (int*)malloc(sizeof(int));
+	*y = 2;
+	int* z = (int*)malloc(sizeof(int));
+	*z = 3;
+	int* a = (int*)malloc(sizeof(int));
+	*a = 4;
+	int* b = (int*)malloc(sizeof(int));
+	*b = 5;
+	int* c = (int*)malloc(sizeof(int));
+	*c = 6;
 	
-	for (i = 0; i < argc; ++i) {
-		printf("%s\n", argv[i]);
-	}
+	linked_list* ll = createLinkedList();
 
-	// create a new heap
-	heap* h = createHeap(N, CUSTOM, alphabetical_order);
-	printf("Initial Length:\t%d\n", h->length);
-	printf("Maximum Length:\t%d\n", h->max_length);
+	addToTail(ll, x);
+	addToTail(ll, y);
+	addToTail(ll, z);
+	addToTail(ll, a);
+	addToTail(ll, b);
+	addToTail(ll, c);
 
-	// create radom strings
-	srand(100);
-	for (i = 0; i < 35; ++i) {
-		x[i] = (char *)malloc(sizeof(char) * 8);
-		for (int k = 0; k < 7; ++k) {
-			x[i][k] = 65 + (rand() % 10);
-		}
-		x[i][7] = '\0';
-		if (insert(h, x[i]) < 0) {
-			printf("filled up\n");
-		}
-	}
+	addToHead(ll, x);
+	addToHead(ll, y);
+	addToHead(ll, z);
+	addToHead(ll, a);
+	addToHead(ll, b);
+	addToHead(ll, c);
 
-	// print random strings
-	for (i = 0; i < N; ++i) {
-		printf("%s\n", (char*)h->array[i]->data);
-	}
-	printf("-------\n");
-
-	// extract random strings in alphabetical order 
-	for (i = 0; i < N; ++i) {
-		printf("%s\n", (char*)extract(h));
-	}
+	print(ll);
 	printf("\n");
 
+	removeFromHead(ll);
+	removeFromTail(ll);
 
-	// free string memory
-	for (i = 0; i < 35; ++i) {
-		free(x[i]);
-	}
+	print(ll);
+	printf("\n");
 
-	// free data structure memory
-	destroyHeap(h);
+	printf("isempty: %d\n", lined_list_isempty(ll));
+	printf(" length: %d\n", linked_list_length(ll));
+
+	printf("   head: %d\n", *(int*)getFromHead(ll));
+	printf("   tail: %d\n", *(int*)getFromTail(ll));
+	printf("index 2: %d\n", *(int*)getFromIndex(ll, 2));
+
+	flush(ll);
+
+	print(ll);
+	printf("\n");
 
 	return 0;
 }
 
 
 
-
-
-int alphabetical_order(node *a, node *b) {
-	int i = 0;
-	while  ( ( (char*)a->data)[i] != '\n') {
-		if ( ( (char*)b->data)[i] == '\n') return 2;
-		if ( ( (char*)a->data)[i] < ((char*)b->data)[i]) return 1;
-		if ( ( (char*)a->data)[i] > ((char*)b->data)[i]) return 2;
-		++i;
-	}
-	return 1;
-}
 
 

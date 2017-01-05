@@ -5,7 +5,8 @@ void heapify(heap* h);
 int parentIndex(int index);
 int leftChildIndex(int index);
 int rightChildIndex(int index);
-
+int int_max_comp(void* a, void* b);
+int int_min_comp(void* a, void* b);
 
 
 
@@ -19,25 +20,25 @@ int rightChildIndex(int index) {
 	return (index+1)*2;
 }
 
-int int_max_comp(node* a, node* b) {
-	if (*(int*)a->data > *(int*)b->data)
+int int_max_comp(void* a, void* b) {
+	if (*(int*)a > *(int*)b)
 		return 1;
-	if (*(int*)b->data > *(int*)a->data)
+	if (*(int*)b > *(int*)a)
 		return 2;
 	return 0;
 }
 
-int int_min_comp(node* a, node* b) {
-	if (*(int*)a->data < *(int*)b->data) 
+int int_min_comp(void* a, void* b) {
+	if (*(int*)a < *(int*)b) 
 		return 1;
-	if (*(int*)b->data < *(int*)a->data)
+	if (*(int*)b < *(int*)a)
 		return 2;
 	return 0;
 }
 
 
 
-heap* createHeap(int length, comparison_type ct, int (*comp_function)(node*, node*)) {
+heap* createHeap(int length, comparison_type ct, int (*comp_function)(void*, void*)) {
 	heap* h = (heap*)malloc(sizeof(heap));
 	h->length = 0;
 	h->max_length = length;
@@ -102,16 +103,16 @@ void heapify(heap* h) {
 			lchild_idx = leftChildIndex(parent_idx);
 			rchild_idx = rightChildIndex(parent_idx);
 
-			parent = h->array[parent_idx];
+			parent = h->array[parent_idx]->data;
 			if (lchild_idx < h->length) {
 				lchild_exists = 1;
-				lchild = h->array[lchild_idx];
+				lchild = h->array[lchild_idx]->data;
 			} else {
 				lchild_exists = 0;
 			}
 			if (rchild_idx < h->length) {
 				rchild_exists = 1;
-				rchild = h->array[rchild_idx];
+				rchild = h->array[rchild_idx]->data;
 			} else {
 				rchild_exists = 0;
 			}

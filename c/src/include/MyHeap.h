@@ -31,7 +31,7 @@ typedef struct heap {
 	int length;
 	node **array;
 	comparison_type comparator;
-	int (*comp_function)(node*, node*);
+	int (*comp_function)(void*, void*);
 } heap;
 
 /*
@@ -41,7 +41,7 @@ typedef struct heap {
  * int (*comp_function)(node*, node*): comparison function when ct is CUSTOM, otherwise NULL
  * Time Complexity: O(1)
  */
-heap* createHeap(int length, comparison_type ct, int (*comp_function)(node*, node*));
+heap* createHeap(int length, comparison_type ct, int (*comp_function)(void*, void*));
 
 /*
  * Free data-structure memory

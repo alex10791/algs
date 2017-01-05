@@ -16,8 +16,8 @@ TARGET = main
 
 all: $(TARGET)
 
-$(TARGET): $(TARGET).c src/MyHeap.c
-	$(CC) $(CFLAGS) -o bin/$(TARGET) $(TARGET).c src/MyHeap.c $(CHEADER_DIR)
+$(TARGET): $(TARGET).c src/MyLinkedList.c
+	$(CC) $(CFLAGS) -o bin/$(TARGET) $(TARGET).c src/MyLinkedList.c $(CHEADER_DIR)
 
 testmyheap: test_my_heap.c src/MyHeap.c
 	$(CC) $(CFLAGS) -o bin/test_my_heap test_my_heap.c src/MyHeap.c $(CHEADER_DIR)

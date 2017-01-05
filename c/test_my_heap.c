@@ -7,7 +7,7 @@
 #define STR_LEN 30		// generated string length
 
 
-int alphabetical_order(node *a, node *b);
+int alphabetical_order(void *a, void *b);
 
 int main(int argc, char*argv[]) {
 	
@@ -61,12 +61,12 @@ int main(int argc, char*argv[]) {
 
 
 
-int alphabetical_order(node *a, node *b) {
+int alphabetical_order(void *a, void *b) {
 	int i = 0;
-	while  ( ( (char*)a->data)[i] != '\n') {
-		if ( ( (char*)b->data)[i] == '\n') return 2;
-		if ( ( (char*)a->data)[i] < ((char*)b->data)[i]) return 1;
-		if ( ( (char*)a->data)[i] > ((char*)b->data)[i]) return 2;
+	while  ( ( (char*)a)[i] != '\n') {
+		if ( ( (char*)b)[i] == '\n') return 2;
+		if ( ( (char*)a)[i] < ((char*)b)[i]) return 1;
+		if ( ( (char*)a)[i] > ((char*)b)[i]) return 2;
 		++i;
 	}
 	return 1;
