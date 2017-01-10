@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "MyLinkedList.h"
+#include "MyHashTable.h"
 
 #define N 30
 
@@ -8,6 +9,67 @@ int alphabetical_order(node *a, node *b);
 
 int main(int argc, char*argv[]) {
 	
+
+	hash_table *ht = create_hash_table(	1000, 	
+										BUILD_IN_PHF, NULL, 
+										BUILD_IN_HF,  NULL, 
+										BUILD_IN_KC,  NULL, 
+										BUILD_IN_VC,  NULL);
+
+	int* k_arr[10000];
+	int* v_arr[10000];
+
+	for (int i = 0; i < 10000; i++) {
+
+		//printf("i: %d\n", i);
+		
+		k_arr[i] = (int *)malloc(1 * sizeof(int));
+		v_arr[i] = (int *)malloc(1 * sizeof(int));
+
+		int *k = k_arr[i];
+		int *v = v_arr[i];
+
+		*k = i;
+		*v = i;
+
+		int *v2;
+
+
+		hash_table_insert(ht, k, v);
+		
+		int k_mod = (*k) % 16;
+		v2 = (int *)hash_table_search(ht,  &k_mod);
+/*
+		if (v2 == NULL) 
+			printf("HT\tk:%d\tv:NULL\n", k_mod);
+		else
+			printf("HT\tk:%d\tv:%d\n", k_mod, *(int*)v2);
+*/
+	}
+
+	delete_hash_table(ht);
+
+	for (int i = 0; i < 10000; ++i) {
+		free(k_arr[i]);
+		free(v_arr[i]);
+	}
+
+	return 0;
+
+	for (int i = 1010; i < 1020; ++i) {
+		int *k = (int *)malloc(1 * sizeof(int));
+
+		*k = i;
+
+		hash_table_delete(ht, k);
+	}
+
+
+	return 0;
+
+
+	// LINKED LIST
+
 	//int i;
 	//char* x[35];
 

@@ -16,7 +16,10 @@ TARGET = main
 
 all: $(TARGET)
 
-$(TARGET): $(TARGET).c src/MyLinkedList.c
+$(TARGET): $(TARGET).c src/MyHashTable.c src/MyLinkedList.c
+	$(CC) $(CFLAGS) -o bin/$(TARGET) $(TARGET).c src/MyHashTable.c src/MyLinkedList.c $(CHEADER_DIR)
+
+testmylinkedlist: $(TARGET).c src/MyLinkedList.c
 	$(CC) $(CFLAGS) -o bin/$(TARGET) $(TARGET).c src/MyLinkedList.c $(CHEADER_DIR)
 
 testmyheap: test_my_heap.c src/MyHeap.c
