@@ -2,10 +2,39 @@
 #define _C_MYHASHTABLE_
 #include <stdlib.h>
 
-typedef enum prehash_function_type {BUILD_IN_PHF, CUSTOM_PHF} prehash_function_type;
-typedef enum hash_function_type {BUILD_IN_HF, CUSTOM_HF} hash_function_type;
-typedef enum key_comparator_type {BUILD_IN_KC, CUSTOM_KC} key_comparator_type;
-typedef enum value_comparator_type {BUILD_IN_VC, CUSTOM_VC} value_comparator_type;
+// #include <stdint.h>
+// #if UINTPTR_MAX == 0xffffffff
+// /* 32-bit */
+// #define INT_TYPE long int
+// #elif UINTPTR_MAX == 0xffffffffffffffff
+// /* 64-bit */
+// #define INT_TYPE long long int
+// #else
+// /* wtf */
+// #endif
+
+typedef enum prehash_function_type {
+	/*Build in int dereferenced prehash function*/	BUILD_IN_ID_PHF,
+	/*Build in int casted prehash function*/		BUILD_IN_IC_PHF,
+ 	/*Custom prehash function*/						CUSTOM_PHF
+} prehash_function_type;
+
+typedef enum hash_function_type {
+	/*Build in hash function*/	BUILD_IN_HF, 
+	/*Custom hash function*/	CUSTOM_HF
+} hash_function_type;
+
+typedef enum key_comparator_type {
+	/*Build in int dereferenced key comparator*/	BUILD_IN_ID_KC, 
+	/*Build in int casted key comparator*/			BUILD_IN_IC_KC,
+	/*Custom key comparator*/						CUSTOM_KC
+} key_comparator_type;
+
+typedef enum value_comparator_type {
+	/*Build in int dereferenced value comparator*/	BUILD_IN_ID_VC, 
+	/*Build in int casted value comparator*/		BUILD_IN_IC_VC,
+	/*Custom value comparator*/						CUSTOM_VC
+} value_comparator_type;
 
 typedef struct item {
 	void* key;
@@ -73,14 +102,6 @@ int hash_table_insert(hash_table *ht, void *key, void *value);
 int hash_table_delete(hash_table *ht, void *key);
 
 /*
- * Build in prehash function
- * Casts void* to int* and returns dereferenced value as prehash
- * Set key pointer
- * Returns a long long int prehash value
- */
-long long int build_in_prehash_function(void* key);
-
-/*
  * Build in hash function
  * Performs prehash % size as hash function
  * Set prehash value
@@ -90,13 +111,21 @@ long long int build_in_prehash_function(void* key);
 unsigned int build_in_hash_function(long long int prehash, int size);
 
 /*
+ * Build in prehash function
+ * Casts void* to int* and returns dereferenced value as prehash
+ * Set key pointer
+ * Returns a long long int prehash value
+ */
+long long int build_in_int_deref_prehash_function(void* key);
+
+/*
  * Build in key comparator function
  * Compares integer values from dereferenced integer pointers
  * Set key1 pointer
  * Set key2 pointer
  * Returns non-zero if equal, zero if un-equal
  */
-int build_in_key_comparator(void* key1, void* key2);
+int build_in_int_deref_key_comparator(void* key1, void* key2);
 
 /*
  * Build in value comparator function
@@ -105,6 +134,32 @@ int build_in_key_comparator(void* key1, void* key2);
  * Set value2 pointer
  * Returns non-zero if equal, zero if un-equal
  */
-int build_in_value_comparator(void* value1, void* value2);
+int build_in_int_deref_value_comparator(void* value1, void* value2);
+
+/*
+ * Build in prehash function
+ * Casts void* to int and returns value as prehash
+ * Set key pointer
+ * Returns a long long int prehash value
+ */
+long long int build_in_int_cast_prehash_function(void* key);
+
+/*
+ * Build in key comparator function
+ * Casts void* to int and compares integer values
+ * Set key1 pointer
+ * Set key2 pointer
+ * Returns non-zero if equal, zero if un-equal
+ */
+int build_in_int_cast_key_comparator(void* key1, void* key2);
+
+/*
+ * Build in value comparator function
+ * Casts void* to int and compares integer values
+ * Set value1 pointer
+ * Set value2 pointer
+ * Returns non-zero if equal, zero if un-equal
+ */
+int build_in_int_cast_value_comparator(void* value1, void* value2);
 
 #endif

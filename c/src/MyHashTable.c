@@ -19,8 +19,10 @@ hash_table* create_hash_table(	unsigned int size,
 	if (phft == CUSTOM_PHF) {
 		if (custom_prehash_function == NULL) return NULL;
 		ht->prehash_function = custom_prehash_function;
+	} else if (phft == BUILD_IN_ID_PHF){
+		ht->prehash_function = build_in_int_deref_prehash_function;
 	} else {
-		ht->prehash_function = build_in_prehash_function;
+		ht->prehash_function = build_in_int_cast_prehash_function;
 	}
 
 	// check if custom hash function given
@@ -35,16 +37,20 @@ hash_table* create_hash_table(	unsigned int size,
 	if (kc == CUSTOM_KC) {
 		if (custom_prehash_function == NULL) return NULL;
 		ht->key_comparator = custom_key_comparator;
+	} else if (kc == BUILD_IN_ID_KC) {
+		ht->key_comparator = build_in_int_deref_key_comparator;
 	} else {
-		ht->key_comparator = build_in_key_comparator;
+		ht->key_comparator = build_in_int_cast_key_comparator;
 	}
 
 	// check if custom value comparator given
 	if (vc == CUSTOM_VC) {
 		if (custom_prehash_function == NULL) return NULL;
 		ht->value_comparator = custom_value_comparator;
+	} else if (vc == BUILD_IN_ID_VC) {
+		ht->value_comparator = build_in_int_deref_value_comparator;
 	} else {
-		ht->value_comparator = build_in_value_comparator;
+		ht->value_comparator = build_in_int_cast_value_comparator;
 	}
 
 	// allocate space for hashtable array
@@ -94,7 +100,7 @@ void* hash_table_search(hash_table *ht, void *key) {
 
 	// loop through linked list in array to find the required emelent
 	item *found = ht->items[idx];
-	while (found != NULL && !build_in_key_comparator(key, found->key)) {
+	while (found != NULL && !ht->key_comparator(key, found->key)) {
 		found = found->next;
 	} 
 
@@ -128,7 +134,7 @@ int hash_table_insert(hash_table *ht, void *key, void *value) {
 
 	// loop through linked list in array to find the next available empty spot
 	item *last = ht->items[idx];
-	while (last->next != NULL && !build_in_key_comparator(key, last->next->key)) {
+	while (last->next != NULL && !ht->key_comparator(key, last->next->key)) {
 		last = last->next;
 	} 
 
@@ -150,7 +156,7 @@ int hash_table_delete(hash_table *ht, void *key) {
 	// loop through linked list in array to find the next available empty spot
 	item *prev = NULL;
 	item *found = ht->items[idx];
-	while (found != NULL && !build_in_key_comparator(key, found->key)) {
+	while (found != NULL && !ht->key_comparator(key, found->key)) {
 		prev = found;
 		found = found->next;
 	}
@@ -174,24 +180,44 @@ int hash_table_delete(hash_table *ht, void *key) {
 	return 1;
 }
 
-long long int build_in_prehash_function(void* key) {
-	// cast void* to int* and return dereferenced value as prehash
-	return *(int*)key;
-}
 
 unsigned int build_in_hash_function(long long int prehash, int size) {
 	// perform % size as hash function
 	return prehash % size;
 }
 
-int build_in_key_comparator(void* key1, void* key2) {
+// Int Dereferencing
+// -----------------
+long long int build_in_int_deref_prehash_function(void* key) {
+	// cast void* to int* and return dereferenced value as prehash
+	return *(int*)key;
+}
+
+int build_in_int_deref_key_comparator(void* key1, void* key2) {
 	// compare integer values from dereferenced integer pointers
 	if (key1 == NULL || key2 == NULL) return 0;
 	return *(int *)key1 == *(int *)key2;
 }
 
-int build_in_value_comparator(void* value1, void* value2) {
+int build_in_int_deref_value_comparator(void* value1, void* value2) {
 	// compare integer values from dereferenced integer pointers
 	return *(int *)value1 == *(int *)value2;
 }
 
+// Int Casting
+// ----------- 
+long long int build_in_int_cast_prehash_function(void* key) {
+	// cast void* to int* and return dereferenced value as prehash
+	return (long long int)key;
+}
+
+int build_in_int_cast_key_comparator(void* key1, void* key2) {
+	// compare integer values from dereferenced integer pointers
+	if (key1 == NULL || key2 == NULL) return 0;
+	return (long long int)key1 == (long long int)key2;
+}
+
+int build_in_int_cast_value_comparator(void* value1, void* value2) {
+	// compare integer values from dereferenced integer pointers
+	return (long long int)value1 == (long long int)value2;
+}

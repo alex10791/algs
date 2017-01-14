@@ -3,7 +3,7 @@
 #include "MyLinkedList.h"
 #include "MyHashTable.h"
 
-#define N 30
+#define N 10000
 
 int alphabetical_order(node *a, node *b);
 
@@ -11,10 +11,35 @@ int main(int argc, char*argv[]) {
 	
 
 	hash_table *ht = create_hash_table(	1000, 	
-										BUILD_IN_PHF, NULL, 
+										BUILD_IN_IC_PHF, NULL, 
+										BUILD_IN_HF,  	 NULL, 
+										BUILD_IN_IC_KC,  NULL, 
+										BUILD_IN_IC_VC,  NULL);
+
+	for (int i = 0; i < N; i++) {
+		int k = i;
+		int v = i;
+		hash_table_insert(ht, (void*)k, (void*)v);
+
+		int v2;
+		int k_mod = k;// % 16;
+		v2 = (int *)hash_table_search(ht,  (void*)k_mod);
+
+		//printf("HT\tk:%d\tv:%lld\n", k_mod, (long long int)v2);
+
+	}
+
+	delete_hash_table(ht);
+
+	return 0;
+
+/*
+	hash_table *ht = create_hash_table(	1000, 	
+										BUILD_IN_ID_PHF, NULL, 
 										BUILD_IN_HF,  NULL, 
-										BUILD_IN_KC,  NULL, 
-										BUILD_IN_VC,  NULL);
+										BUILD_IN_ID_KC,  NULL, 
+										BUILD_IN_ID_VC,  NULL);
+*/
 
 	int* k_arr[10000];
 	int* v_arr[10000];
