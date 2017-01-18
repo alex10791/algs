@@ -88,6 +88,21 @@ void delete_hash_table(hash_table *ht) {
 	free(ht);
 }
 
+void for_each_in_hash_table(hash_table *ht, void (*callback)(void* key, void* value)) {
+	int i;
+	// step through entire hashtable array
+	for (i = 0; i < ht->size; ++i) {
+		item *curr = ht->items[i];
+		item *next;
+		// call callback function on each element until the element found is NULL
+		while (curr != NULL) {
+			next = curr->next;
+			callback(curr->key, curr->value);
+			curr = next;
+		}
+	}
+}
+
 void* hash_table_search(hash_table *ht, void *key) {
 	// run prehash and hash functions to get array index
 	int prehash = ht->prehash_function(key);

@@ -162,4 +162,13 @@ int build_in_int_cast_key_comparator(void* key1, void* key2);
  */
 int build_in_int_cast_value_comparator(void* value1, void* value2);
 
+/*
+ * Run a callback for each element in function
+ * Set hastable pointer
+ * Set callback function
+ * -- callback function gets key as void*
+ * -- callback function gets value as void*
+ */
+void for_each_in_hash_table(hash_table *ht, void (*callback)(void* key, void* value));
+
 #endif

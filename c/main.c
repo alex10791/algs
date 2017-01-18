@@ -5,10 +5,22 @@
 
 #define N 10000
 
+long long int gCounter;
+long long int gKeyAccum;
+long long int gValAccum;
+
 int alphabetical_order(node *a, node *b);
 
+void inc_gCounter(void* key, void* value) {
+	gCounter++;
+	gKeyAccum += (long long int)key;
+	gValAccum += (long long int)value;
+}
+
 int main(int argc, char*argv[]) {
-	
+	gCounter = 0;
+	int i;
+
 
 	hash_table *ht = create_hash_table(	1000, 	
 										BUILD_IN_IC_PHF, NULL, 
@@ -16,18 +28,25 @@ int main(int argc, char*argv[]) {
 										BUILD_IN_IC_KC,  NULL, 
 										BUILD_IN_IC_VC,  NULL);
 
-	for (int i = 0; i < N; i++) {
-		int k = i;
-		int v = i;
+
+	for (i = 0; i < N; i++) {
+		long long int k = i;
+		long long int v = i;
 		hash_table_insert(ht, (void*)k, (void*)v);
 
-		int v2;
-		int k_mod = k;// % 16;
-		v2 = (int *)hash_table_search(ht,  (void*)k_mod);
+		long long int v2;
+		long long int k_mod = k;// % 16;
+		v2 = (long long int)hash_table_search(ht,  (void*)k_mod);
 
 		//printf("HT\tk:%d\tv:%lld\n", k_mod, (long long int)v2);
 
 	}
+
+	for_each_in_hash_table(ht, inc_gCounter);
+
+	printf("gCounter\t%lld\n",  gCounter);
+	printf("gKeyAccum\t%lld\n", gKeyAccum);
+	printf("gValAccum\t%lld\n", gValAccum);
 
 	delete_hash_table(ht);
 
@@ -44,7 +63,7 @@ int main(int argc, char*argv[]) {
 	int* k_arr[10000];
 	int* v_arr[10000];
 
-	for (int i = 0; i < 10000; i++) {
+	for (i = 0; i < 10000; i++) {
 
 		//printf("i: %d\n", i);
 		
@@ -74,14 +93,14 @@ int main(int argc, char*argv[]) {
 
 	delete_hash_table(ht);
 
-	for (int i = 0; i < 10000; ++i) {
+	for (i = 0; i < 10000; ++i) {
 		free(k_arr[i]);
 		free(v_arr[i]);
 	}
 
 	return 0;
 
-	for (int i = 1010; i < 1020; ++i) {
+	for (i = 1010; i < 1020; ++i) {
 		int *k = (int *)malloc(1 * sizeof(int));
 
 		*k = i;
