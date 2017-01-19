@@ -136,6 +136,16 @@ int hash_table_insert(hash_table *ht, void *key, void *value) {
 	int prehash = ht->prehash_function(key);
 	unsigned int idx = ht->hash_function(prehash, ht->size);
 
+	// loop through linked list in array to find the emelent if it exists
+	item *found = ht->items[idx];
+	while (found != NULL && !ht->key_comparator(key, found->key)) {
+		found = found->next;
+	} 
+	if (found != NULL) {
+		found->value = value;
+		return 1;
+	}
+
 	// update new hashtable entry values
 	new_item->key = key;
 	new_item->value = value;

@@ -28,6 +28,19 @@ int main(int argc, char*argv[]) {
 										BUILD_IN_IC_KC,  NULL, 
 										BUILD_IN_IC_VC,  NULL);
 
+	void* x2 = (void*)123;
+	void* y2 = 0;
+
+	for (i = 0; i < N; i++) {
+		y2 = hash_table_search(ht, (void*)x2);
+		y2 = (void*)((long long int)y2 + 1);
+		hash_table_insert(ht, (void*)x2, (void*)y2);
+	}
+
+	y2 = hash_table_search(ht, (void*)x2);
+	printf("ht[%lld] = %lld\n", (long long int)x2, (long long int)y2);
+
+	return 0;
 
 	for (i = 0; i < N; i++) {
 		long long int k = i;
