@@ -128,10 +128,6 @@ void* hash_table_search(hash_table *ht, void *key) {
 }
 
 int hash_table_insert(hash_table *ht, void *key, void *value) {
-	// allocate memory for new hashtable entry
-	item *new_item = (item*)malloc(sizeof(item));
-	if (new_item == NULL) return -1;	// maybe also right into stderr
-
 	// run prehash and hash functions to get array index
 	int prehash = ht->prehash_function(key);
 	unsigned int idx = ht->hash_function(prehash, ht->size);
@@ -145,6 +141,10 @@ int hash_table_insert(hash_table *ht, void *key, void *value) {
 		found->value = value;
 		return 1;
 	}
+
+	// allocate memory for new hashtable entry
+	item *new_item = (item*)malloc(sizeof(item));
+	if (new_item == NULL) return -1;	// maybe also right into stderr
 
 	// update new hashtable entry values
 	new_item->key = key;
