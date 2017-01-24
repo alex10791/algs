@@ -1,6 +1,7 @@
 #ifndef _C_MYHASHTABLE_
 #define _C_MYHASHTABLE_
 #include <stdlib.h>
+#include <stdio.h>
 
 // #include <stdint.h>
 // #if UINTPTR_MAX == 0xffffffff
@@ -35,6 +36,16 @@ typedef enum value_comparator_type {
 	/*Build in int casted value comparator*/		BUILD_IN_IC_VC,
 	/*Custom value comparator*/						CUSTOM_VC
 } value_comparator_type;
+
+typedef enum print_key_type {
+	/*Build in int dereferenced key print*/			INT_DEREFERENCE_KP, 
+	/*Build in int casted key print*/				INT_CAST_KP
+} print_key_type;
+
+typedef enum print_value_type {
+	/*Build in int dereferenced value print*/		INT_DEREFERENCE_VP, 
+	/*Build in int casted value print*/				INT_CAST_VP
+} print_value_type;
 
 typedef struct item {
 	void* key;
@@ -170,5 +181,22 @@ int build_in_int_cast_value_comparator(void* value1, void* value2);
  * -- callback function gets value as void*
  */
 void for_each_in_hash_table(hash_table *ht, void (*callback)(void* key, void* value));
+
+/*
+ * Print hashtable for build in functions
+ * Set hastable pointer
+ * Set key pointer usage
+ * Set key format
+ * Set value pointer usage
+ * Set value format
+ * Set chain separator string i.e. "#\n"
+ * SHOULD ONLY BE USED FOR BUILD IN TYPES
+ * FOR OTHER TYPES USE for_each_in_hash_table() FUNCTION
+ * example: print_ht(ht, INT_CAST_KP, "%p:", INT_CAST_VP, "%p->", "#\n");
+ */
+void print_ht(	hash_table* ht, 
+				print_key_type pkt, const char* key_format, 
+				print_value_type pvt, const char* value_format,
+				const char* chain_sperator);
 
 #endif

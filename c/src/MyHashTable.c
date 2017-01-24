@@ -103,6 +103,35 @@ void for_each_in_hash_table(hash_table *ht, void (*callback)(void* key, void* va
 	}
 }
 
+void print_ht(	hash_table* ht, 
+				print_key_type pkt, const char* key_format, 
+				print_value_type pvt, const char* value_format,
+				const char* chain_sperator) {
+	int i;
+	// step through entire hashtable array
+	for (i = 0; i < ht->size; ++i) {
+		item *curr = ht->items[i];
+		item *next;
+		// call callback function on each element until the element found is NULL
+		while (curr != NULL) {
+			next = curr->next;
+			// print elements as specified
+			if (pkt == INT_DEREFERENCE_KP) {
+				printf(key_format, *((int*)curr->key));
+			} else {	// INT_CAST_KP
+				printf(key_format, curr->key);
+			}
+			if (pvt == INT_DEREFERENCE_VP) {
+				printf(value_format, *((int*)curr->value));
+			} else {	// INT_CAST_VP
+				printf(value_format, curr->value);
+			}
+			curr = next;
+		}
+		printf("%s", chain_sperator);
+	}
+}
+
 void* hash_table_search(hash_table *ht, void *key) {
 	// run prehash and hash functions to get array index
 	int prehash = ht->prehash_function(key);
@@ -238,7 +267,7 @@ long long int build_in_int_cast_prehash_function(void* key) {
 
 int build_in_int_cast_key_comparator(void* key1, void* key2) {
 	// compare integer values from dereferenced integer pointers
-	if (key1 == NULL || key2 == NULL) return 0;
+	//if (key1 == NULL || key2 == NULL) return 0;
 	return (long long int)key1 == (long long int)key2;
 }
 
@@ -246,3 +275,4 @@ int build_in_int_cast_value_comparator(void* value1, void* value2) {
 	// compare integer values from dereferenced integer pointers
 	return (long long int)value1 == (long long int)value2;
 }
+

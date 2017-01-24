@@ -3,7 +3,10 @@
 #include "MyLinkedList.h"
 #include "MyHashTable.h"
 
+#include <time.h>
+
 #define N 10000
+#define M 40
 
 long long int gCounter;
 long long int gKeyAccum;
@@ -17,19 +20,57 @@ void inc_gCounter(void* key, void* value) {
 	gValAccum += (long long int)value;
 }
 
+unsigned int hash(long long int x, int size) {
+	return x & 0xF;
+}
+
 int main(int argc, char*argv[]) {
 	gCounter = 0;
 	int i;
 
 
-	hash_table *ht = create_hash_table(	1000, 	
+	void* x2 = (void*)123;
+	void* y2 = 0;
+
+
+	hash_table *ht2 = create_hash_table(	0x10, 	
+										BUILD_IN_IC_PHF, NULL, 
+										CUSTOM_HF,  	 hash, 
+										BUILD_IN_IC_KC,  NULL, 
+										BUILD_IN_IC_VC,  NULL);
+
+
+	srand(time(NULL));
+
+	int arr[M];
+	for (i = 0; i < M; ++i) arr[i] = 0;
+
+	for (i = 0; i < 20; i++) {
+		int r0 = rand() % M;
+		arr[r0]++;
+		//int r1 = rand();
+		x2 = (void*)r0;
+		//y2 = (void*)r1;
+		y2 = hash_table_search(ht2, (void*)x2);
+		y2 = (void*)((long long int)y2 + 1);
+		hash_table_insert(ht2, (void*)x2, (void*)y2);
+	}
+	printf("\n");
+
+	for (i = 0; i < M; ++i) 
+		printf("%p\t%p\n", (void*)i,(void*)arr[i]);
+
+	print_ht(ht2, INT_CAST_KP, "%p:", INT_CAST_VP, "%p->", "#\n");
+
+	return 0;
+
+
+	hash_table *ht = create_hash_table(	0x100000, 	
 										BUILD_IN_IC_PHF, NULL, 
 										BUILD_IN_HF,  	 NULL, 
 										BUILD_IN_IC_KC,  NULL, 
 										BUILD_IN_IC_VC,  NULL);
 
-	void* x2 = (void*)123;
-	void* y2 = 0;
 
 	for (i = 0; i < N; i++) {
 		y2 = hash_table_search(ht, (void*)x2);
